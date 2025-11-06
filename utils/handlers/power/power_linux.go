@@ -15,10 +15,10 @@ func shutdown() error {
 	}
 
 	command := s.PowerCommands.Poweroff
-	if command == "" {
-		command = "systemctl poweroff"
+	if len(command) == 0 {
+		command = []string{"systemctl", "poweroff"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }
 
@@ -29,10 +29,10 @@ func restart() error {
 	}
 
 	command := s.PowerCommands.Reboot
-	if command == "" {
-		command = "systemctl reboot"
+	if len(command) == 0 {
+		command = []string{"systemctl", "reboot"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }
 
@@ -43,10 +43,10 @@ func sleep() error {
 	}
 
 	command := s.PowerCommands.Suspend
-	if command == "" {
-		command = "systemctl suspend"
+	if len(command) == 0 {
+		command = []string{"systemctl", "suspend"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }
 
@@ -57,10 +57,10 @@ func hibernate() error {
 	}
 
 	command := s.PowerCommands.Hibernate
-	if command == "" {
-		command = "systemctl hibernate"
+	if len(command) == 0 {
+		command = []string{"systemctl", "hibernate"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }
 
@@ -71,10 +71,10 @@ func lock() error {
 	}
 
 	command := s.PowerCommands.Lock
-	if command == "" {
-		command = "loginctl lock-session"
+	if len(command) == 0 {
+		command = []string{"loginctl", "lock-session"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }
 
@@ -85,9 +85,9 @@ func logout() error {
 	}
 
 	command := s.PowerCommands.Logout
-	if command == "" {
-		command = "loginctl terminate-session $XDG_SESSION_ID"
+	if len(command) == 0 {
+		command = []string{"loginctl", "terminate-session", "$XDG_SESSION_ID"}
 	}
-	cmd := exec.Command(command)
+	cmd := exec.Command(command[0], command[1:]...)
 	return cmd.Run()
 }

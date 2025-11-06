@@ -84,12 +84,12 @@ type SettingsMedia struct {
 }
 
 type SettingsPowerCommands struct {
-	Hibernate string `json:"hibernate" mapstructure:"hibernate"`
-	Poweroff  string `json:"poweroff" mapstructure:"poweroff"`
-	Reboot    string `json:"reboot" mapstructure:"reboot"`
-	Suspend   string `json:"suspend" mapstructure:"suspend"`
-	Logout    string `json:"logout" mapstructure:"logout"`
-	Lock      string `json:"lock" mapstructure:"lock"`
+	Hibernate []string `json:"hibernate" mapstructure:"hibernate"`
+	Poweroff  []string `json:"poweroff" mapstructure:"poweroff"`
+	Reboot    []string `json:"reboot" mapstructure:"reboot"`
+	Suspend   []string `json:"suspend" mapstructure:"suspend"`
+	Logout    []string `json:"logout" mapstructure:"logout"`
+	Lock      []string `json:"lock" mapstructure:"lock"`
 }
 
 type Settings struct {
@@ -117,7 +117,12 @@ func Load() (*Settings, error) {
 	viper.SetDefault("hotkeys", []SettingsHotkey{})
 	viper.SetDefault("logLevel", LogLevelInfo)
 	viper.SetDefault("media.directories", []SettingsMediaDirectory{})
-	viper.SetDefault("powerCommands", SettingsPowerCommands{})
+	viper.SetDefault("powerCommands.poweroff", []string{})
+	viper.SetDefault("powerCommands.reboot", []string{})
+	viper.SetDefault("powerCommands.suspend", []string{})
+	viper.SetDefault("powerCommands.hibernate", []string{})
+	viper.SetDefault("powerCommands.logout", []string{})
+	viper.SetDefault("powerCommands.lock", []string{})
 
 	// Read the config file
 	if err := viper.ReadInConfig(); err != nil {
