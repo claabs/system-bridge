@@ -4,34 +4,90 @@ package power
 
 import (
 	"os/exec"
+
+	"github.com/timmo001/system-bridge/settings"
 )
 
 func shutdown() error {
-	cmd := exec.Command("systemctl", "poweroff")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Poweroff
+	if command == "" {
+		command = "systemctl poweroff"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }
 
 func restart() error {
-	cmd := exec.Command("systemctl", "reboot")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Reboot
+	if command == "" {
+		command = "systemctl reboot"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }
 
 func sleep() error {
-	cmd := exec.Command("systemctl", "suspend")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Suspend
+	if command == "" {
+		command = "systemctl suspend"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }
 
 func hibernate() error {
-	cmd := exec.Command("systemctl", "hibernate")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Hibernate
+	if command == "" {
+		command = "systemctl hibernate"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }
 
 func lock() error {
-	cmd := exec.Command("loginctl", "lock-session")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Lock
+	if command == "" {
+		command = "loginctl lock-session"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }
 
 func logout() error {
-	cmd := exec.Command("loginctl", "terminate-session", "$XDG_SESSION_ID")
+	s, err := settings.Load()
+	if err != nil {
+		return err
+	}
+
+	command := s.PowerCommands.Logout
+	if command == "" {
+		command = "loginctl terminate-session $XDG_SESSION_ID"
+	}
+	cmd := exec.Command(command)
 	return cmd.Run()
 }

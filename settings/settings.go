@@ -83,11 +83,21 @@ type SettingsMedia struct {
 	Directories []SettingsMediaDirectory `json:"directories" mapstructure:"directories"`
 }
 
+type SettingsPowerCommands struct {
+	Hibernate string `json:"hibernate" mapstructure:"hibernate"`
+	Poweroff  string `json:"poweroff" mapstructure:"poweroff"`
+	Reboot    string `json:"reboot" mapstructure:"reboot"`
+	Suspend   string `json:"suspend" mapstructure:"suspend"`
+	Logout    string `json:"logout" mapstructure:"logout"`
+	Lock      string `json:"lock" mapstructure:"lock"`
+}
+
 type Settings struct {
-	Autostart bool             `json:"autostart" mapstructure:"autostart"`
-	Hotkeys   []SettingsHotkey `json:"hotkeys" mapstructure:"hotkeys"`
-	LogLevel  LogLevel         `json:"logLevel" mapstructure:"logLevel"`
-	Media     SettingsMedia    `json:"media" mapstructure:"media"`
+	Autostart     bool                  `json:"autostart" mapstructure:"autostart"`
+	Hotkeys       []SettingsHotkey      `json:"hotkeys" mapstructure:"hotkeys"`
+	LogLevel      LogLevel              `json:"logLevel" mapstructure:"logLevel"`
+	Media         SettingsMedia         `json:"media" mapstructure:"media"`
+	PowerCommands SettingsPowerCommands `json:"powerCommands" mapstructure:"powerCommands"`
 }
 
 func Load() (*Settings, error) {
@@ -107,6 +117,7 @@ func Load() (*Settings, error) {
 	viper.SetDefault("hotkeys", []SettingsHotkey{})
 	viper.SetDefault("logLevel", LogLevelInfo)
 	viper.SetDefault("media.directories", []SettingsMediaDirectory{})
+	viper.SetDefault("powerCommands", SettingsPowerCommands{})
 
 	// Read the config file
 	if err := viper.ReadInConfig(); err != nil {
@@ -155,6 +166,7 @@ func (cfg *Settings) Save() error {
 	viper.Set("hotkeys", cfg.Hotkeys)
 	viper.Set("logLevel", string(cfg.LogLevel))
 	viper.Set("media.directories", cfg.Media.Directories)
+	viper.Set("powerCommands", cfg.PowerCommands)
 
 	if err := viper.WriteConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
